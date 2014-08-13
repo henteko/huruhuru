@@ -15,6 +15,9 @@ import android.os.Build;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
+import com.parse.Parse;
+import com.parse.ParseInstallation;
+import com.parse.PushService;
 import com.squareup.seismic.ShakeDetector;
 
 
@@ -30,6 +33,10 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        Parse.initialize(this, BuildConfig.PARSE_APPLICATION_ID, BuildConfig.PARSE_CLIENT_KEY);
+        PushService.setDefaultPushCallback(this, MyActivity.class);
+        ParseInstallation.getCurrentInstallation().saveEventually();
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         ShakeDetector sd = new ShakeDetector(this);

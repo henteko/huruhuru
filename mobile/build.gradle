@@ -12,9 +12,16 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "PARSE_APPLICATION_ID", parseApplicationID
+            buildConfigField "String", "PARSE_CLIENT_KEY", parseClientKey
+        }
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "PARSE_APPLICATION_ID", parseApplicationID
+            buildConfigField "String", "PARSE_CLIENT_KEY", parseClientKey
         }
     }
 }
