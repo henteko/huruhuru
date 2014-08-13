@@ -73,7 +73,7 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
 
     public void hearShake() {
         if (mIsSwitch) {
-            Log.d("shake!!!!!!!!!", "shake!!!!!!!now!!!!!!!!!!!");
+            mParseUtil.sendMessage("はろー！！！！！！");
         }
     }
 

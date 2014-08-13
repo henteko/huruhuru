@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 import com.parse.PushService;
 
 /**
@@ -29,5 +30,12 @@ public class ParseUtil {
         PushService.subscribe(mContext, parseChannel, mActivity.getClass());
         PushService.unsubscribe(mContext, parseUnChannel);
         ParseInstallation.getCurrentInstallation().saveInBackground();
+    }
+
+    public void sendMessage(String message) {
+        ParsePush push = new ParsePush();
+        push.setChannel(PARSE_ENABLE_CHANNEL);
+        push.setMessage(message);
+        push.sendInBackground();
     }
 }
