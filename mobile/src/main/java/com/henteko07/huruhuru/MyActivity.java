@@ -28,6 +28,7 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
 
     private static boolean mIsSwitch;
     private static SharedPreferences mPreferences;
+    private static ParseUtil mParseUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +41,10 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
         }
 
         mPreferences = this.getSharedPreferences("user_data", Context.MODE_PRIVATE);
-        mIsSwitch = mPreferences.getBoolean(SWITCH_KEY, true);;
+        mIsSwitch = mPreferences.getBoolean(SWITCH_KEY, true);
 
-        Parse.initialize(this, BuildConfig.PARSE_APPLICATION_ID, BuildConfig.PARSE_CLIENT_KEY);
-        PushService.setDefaultPushCallback(this, MyActivity.class);
-        ParseInstallation.getCurrentInstallation().saveEventually();
+        mParseUtil = new ParseUtil(this, this);
+        mParseUtil.updateChannel(mIsSwitch);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         ShakeDetector sd = new ShakeDetector(this);
@@ -105,6 +105,8 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
                     SharedPreferences.Editor editor = mPreferences.edit();
                     editor.putBoolean(SWITCH_KEY, mIsSwitch);
                     editor.commit();
+
+                    mParseUtil.updateChannel(mIsSwitch);
                 }
             });
         }
