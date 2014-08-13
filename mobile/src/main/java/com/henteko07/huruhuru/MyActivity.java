@@ -3,6 +3,8 @@ package com.henteko07.huruhuru;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +24,10 @@ import com.squareup.seismic.ShakeDetector;
 
 
 public class MyActivity extends Activity implements ShakeDetector.Listener {
+    private static final String SWITCH_KEY = "switch";
+
     private static boolean mIsSwitch;
+    private static SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,9 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        mPreferences = this.getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        mIsSwitch = mPreferences.getBoolean(SWITCH_KEY, true);;
 
         Parse.initialize(this, BuildConfig.PARSE_APPLICATION_ID, BuildConfig.PARSE_CLIENT_KEY);
         PushService.setDefaultPushCallback(this, MyActivity.class);
@@ -87,7 +95,6 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
         @Override
         public void onStart() {
             super.onStart();
-            mIsSwitch = false;
 
             ToggleButton button = (ToggleButton) getActivity().findViewById(R.id.toggleButton);
             button.setChecked(mIsSwitch);
@@ -95,6 +102,9 @@ public class MyActivity extends Activity implements ShakeDetector.Listener {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     mIsSwitch = isChecked;
+                    SharedPreferences.Editor editor = mPreferences.edit();
+                    editor.putBoolean(SWITCH_KEY, mIsSwitch);
+                    editor.commit();
                 }
             });
         }
